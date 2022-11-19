@@ -1,0 +1,31 @@
+{
+  "name": "gcal-subscription-sync",
+  "version": "1.0.0",
+  "description": "Periodically sync calendar subscriptions to a local Google Calendar with GitHub Actions 📅",
+  "keywords": [
+    "google",
+    "calendar",
+    "google-calendar",
+    "google-calendar-api",
+    "google-api",
+    "gapi",
+    "calendar-sync",
+    "calendar-subscriptions",
+    "cron",
+    "cron-jobs",
+    "github-actions"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@googleapis/calendar": "^3.0.0",
+    "dotenv": "^16.0.3",
+    "ical-expander": "^3.1.0",
+    "node-fetch": "^3.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js"
+  }
+}
