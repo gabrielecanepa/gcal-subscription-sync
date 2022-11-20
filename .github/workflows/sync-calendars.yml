@@ -1,4 +1,4 @@
-name: Schedule calendar synchronization
+name: Sync calendars
 
 on:
   push:
@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Node.js ⚙️
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 17.5.0
           cache: yarn
-      - name: Install dependencies 📦
+      - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Run synchronization script 📅
+      - name: Run synchronization script
         run: yarn start
         env:
           GOOGLE_CLIENT_EMAIL: ${{ secrets.GOOGLE_CLIENT_EMAIL }}
