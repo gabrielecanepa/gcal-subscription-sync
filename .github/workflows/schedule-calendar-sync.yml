@@ -1,0 +1,25 @@
+name: Schedule calendar synchronization
+
+on:
+  push:
+  schedule:
+    - cron: 0 * * * *
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js ⚙️
+        uses: actions/setup-node@v2
+        with:
+          node-version: 17.5.0
+      - name: Install dependencies 📦
+        run: yarn install --frozen-lockfile
+      - name: Run synchronization script 📅
+        run: yarn start
+        env:
+          GOOGLE_CLIENT_EMAIL: ${{ secrets.GOOGLE_CLIENT_EMAIL }}
+          GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
+          GOOGLE_CALENDAR_IDS: ${{ secrets.GOOGLE_CALENDAR_IDS }}
+          SUBSCRIPTION_URIS: ${{ secrets.SUBSCRIPTION_URIS }}

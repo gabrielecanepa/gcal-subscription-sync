@@ -77,6 +77,6 @@ calendarsIds.forEach(async (calendarId, i) => {
       await client.events.update({ calendarId, eventId: event.id, resource: { ...event, ...icsEvent } })
     }
   } catch (e) {
-    console.error(e)
+    console.error(e) // eslint-disable-line no-console
   }
 })
