@@ -13,10 +13,12 @@ const GOOGLE_PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY
 const GOOGLE_CALENDAR_IDS = process.env.GOOGLE_CALENDAR_IDS
 const SUBSCRIPTION_URIS = process.env.SUBSCRIPTION_URIS
 
+// Costants
+const SCOPES = ['https://www.googleapis.com/auth/calendar']
+const BASE32HEX_REGEXP = /([a-v]|[0-9])/g
+
 const calendarsIds = GOOGLE_CALENDAR_IDS.split(',')
 const subscriptionsUris = SUBSCRIPTION_URIS.split(',')
-
-const SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 const auth = new googleAuth.GoogleAuth({
   scopes: SCOPES,
@@ -34,8 +36,11 @@ const client = googleCalendar({
 const parseEvent = event => {
   const { uid, summary, location, description, startDate, endDate } = event
 
+  // Convert uid to a base32hex string as required by the Google Calendar API
+  const id = uid.match(BASE32HEX_REGEXP).join('')
+
   return {
-    id: uid.split('@')[0],
+    id,
     summary,
     location,
     description,
