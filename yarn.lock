@@ -36,6 +36,14 @@ buffer-equal-constant-time@1.0.1:
   resolved "https://registry.yarnpkg.com/buffer-equal-constant-time/-/buffer-equal-constant-time-1.0.1.tgz#f8e71132f7ffe6e01a5c9697a4c6f3e48d5cc819"
   integrity sha512-zRpUiDwd/xk6ADqPMATG8vc9VPrkck7T07OIx0gnjmJAnHnTVXNQG3vfvWNuiZIkwu9KrKdA1iJKfsfTVxE6NA==
 
+cal-parser@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/cal-parser/-/cal-parser-1.0.2.tgz#527bebdd0ef915cdf0d1fc02a38da3f290da26f4"
+  integrity sha512-wlQwcF0fl4eLclyGdncF9rcNNq0ipRYZGagG6h3LVgRXvCWE1fdMUaCLXwfC9YWoz9jKKbjQAq7TpO2Y3yrvmA==
+  dependencies:
+    ical-date-parser "^4.0.0"
+    rrule "^2.6.8"
+
 call-bind@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/call-bind/-/call-bind-1.0.2.tgz#b1d4e89e688119c3c9a903ad30abb2f6a919be3c"
@@ -188,17 +196,10 @@ https-proxy-agent@^5.0.0:
     agent-base "6"
     debug "4"
 
-ical-expander@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/ical-expander/-/ical-expander-3.1.0.tgz#e802e5736faf02ba7420edc248c222fbe543844b"
-  integrity sha512-O8svRo6diKUVL7NOplE/M2p5/N69FnGmBJ4KnS+2Bu3VLjda0GR6JgH1QybjSXL8DzX3GYkk4opQ2H5Qt/vl4w==
-  dependencies:
-    ical.js "^1.2.2"
-
-ical.js@^1.2.2:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/ical.js/-/ical.js-1.5.0.tgz#23213accd1d8f7248d01705acb06270a70d20662"
-  integrity sha512-7ZxMkogUkkaCx810yp0ZGKvq1ZpRgJeornPttpoxe6nYZ3NLesZe1wWMXDdwTkj/b5NtXT+Y16Aakph/ao98ZQ==
+ical-date-parser@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/ical-date-parser/-/ical-date-parser-4.0.0.tgz#4236b3043feda307c6c01f5a9da3e28b0ba1bdb1"
+  integrity sha512-XRCK/FU1akC2ZaJOdKIeZI6BLLgzWUuE0pegSrrkEva89GOan5mNkLVqCU4EMhCJ9nkG5TLWdMXrVX1fNAkFzw==
 
 is-stream@^2.0.0:
   version "2.0.1"
@@ -279,6 +280,13 @@ qs@^6.7.0:
   dependencies:
     side-channel "^1.0.4"
 
+rrule@^2.6.8:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/rrule/-/rrule-2.7.1.tgz#2511e1aed0e96fb5acf831304cde97d2cb65d99e"
+  integrity sha512-4p20u/1U7WqR3Nb1hOUrm0u1nSI7sO93ZUVZEZ5HeF6Gr5OlJuyhwEGRvUHq8ZfrPsq5gfa5b9dqnUs/kPqpIw==
+  dependencies:
+    tslib "^2.4.0"
+
 safe-buffer@^5.0.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
@@ -297,6 +305,11 @@ tr46@~0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
+
+tslib@^2.4.0:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.1.tgz#0d0bfbaac2880b91e22df0768e55be9753a5b17e"
+  integrity sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==
 
 url-template@^2.0.8:
   version "2.0.8"

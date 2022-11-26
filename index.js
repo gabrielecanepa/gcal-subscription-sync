@@ -4,7 +4,7 @@ dotenv.config()
 
 // Imports
 import fetch from 'node-fetch'
-import ICalExpander from 'ical-expander'
+import { parseString as parseIcs } from 'cal-parser'
 import { auth as googleAuth, calendar as googleCalendar } from '@googleapis/calendar'
 import { existsSync } from 'fs'
 
@@ -36,24 +36,40 @@ const client = googleCalendar({
 })
 
 /**
+ * Format ICS start or end dates.
+ *
+ * @param {object} dtdate
+ * @returns {object}
+ */
+const parseEventDate = dtdate => {
+  const { value, params } = dtdate
+
+  if (params.value === 'DATE') {
+    return { date: value.toISOString().split('T')[0] }
+  }
+
+  return params.tzid ? { dateTime: value, timeZone: params.tzid } : { dateTime: value }
+}
+
+/**
  * Format an ICS event as required by the Google Calendar API.
  *
  * @param {object} icsEvent
  * @returns {object}
  */
 const parseEvent = event => {
-  const { uid, summary, location, description, startDate, endDate } = event
+  const { uid, summary, location, description, dtstart, dtend } = event
 
-  // Convert UID to a base32hex ID as required by the Google Calendar API.
-  const id = uid.match(BASE32HEX_REGEXP).join('')
+  // Convert UID to a base32hex ID as required by the Google Calendar API
+  const id = uid.value.match(BASE32HEX_REGEXP).join('')
 
   return {
     id,
-    summary,
-    location,
-    description,
-    start: { dateTime: startDate.toJSDate() },
-    end: { dateTime: endDate.toJSDate() },
+    summary: summary.value,
+    location: location.value,
+    description: description.value,
+    start: parseEventDate(dtstart),
+    end: parseEventDate(dtend),
   }
 }
 
@@ -109,8 +125,7 @@ for (const calendarId of GOOGLE_CALENDAR_IDS) {
     const events = data.items
 
     const ics = await (await fetch(SUBSCRIPTION_URIS[i])).text()
-    const icsCalendar = new ICalExpander({ ics }).all()
-    const icsEvents = icsCalendar.events.map(event => parseEvent(event))
+    const icsEvents = parseIcs(ics).events.map(event => parseEvent(event))
     const icsEventsTransformed = transformEvents(calendarId, icsEvents)
 
     for (const icsEvent of icsEventsTransformed) {
