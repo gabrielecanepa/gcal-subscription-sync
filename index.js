@@ -4,23 +4,21 @@ dotenv.config()
 
 // Imports
 import fetch from 'node-fetch'
-import { parseString as parseIcs } from 'cal-parser'
 import { auth as googleAuth, calendar as googleCalendar } from '@googleapis/calendar'
-import { existsSync } from 'fs'
+import { parseString as parseIcs } from 'cal-parser'
 
-// Environment variables
+// Env variables
 const GOOGLE_CLIENT_EMAIL = process.env.GOOGLE_CLIENT_EMAIL
 const GOOGLE_PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY
-const GOOGLE_CALENDAR_IDS = process.env.GOOGLE_CALENDAR_IDS.split(',')
-const SUBSCRIPTION_URIS = process.env.SUBSCRIPTION_URIS.split(',')
-const OVERRIDES_PATH = process.env.OVERRIDES_PATH || './overrides.js'
+const SUBSCRIPTIONS = eval(process.env.SUBSCRIPTIONS)
 
-// Costants
+if (!GOOGLE_CLIENT_EMAIL || !GOOGLE_PRIVATE_KEY || !SUBSCRIPTIONS) {
+  throw new Error(`Wrong environment variables. Rename the '.env.sample' file to '.env' and update the values.`)
+}
+
+// Constants
 const SCOPES = ['https://www.googleapis.com/auth/calendar']
-const BASE32HEX_REGEXP = /([a-v]|[0-9])/g
-
-// Variables
-let overrides = {}
+const BASE32HEX_REGEXP = /([a-v]|[0-9])/gi
 
 const auth = new googleAuth.GoogleAuth({
   scopes: SCOPES,
@@ -36,19 +34,14 @@ const client = googleCalendar({
 })
 
 /**
- * Format ICS start or end dates.
+ * Format ICS start or end date.
  *
  * @param {object} dtdate
  * @returns {object}
  */
 const parseEventDate = dtdate => {
   const { value, params } = dtdate
-
-  if (params.value === 'DATE') {
-    return { date: value.toISOString().split('T')[0] }
-  }
-
-  return params.tzid ? { dateTime: value, timeZone: params.tzid } : { dateTime: value }
+  return params.value === 'DATE' ? { date: value.toISOString().split('T')[0] } : { dateTime: value }
 }
 
 /**
@@ -61,7 +54,7 @@ const parseEvent = event => {
   const { uid, summary, location, description, dtstart, dtend } = event
 
   // Convert UID to a base32hex ID as required by the Google Calendar API
-  const id = uid.value.match(BASE32HEX_REGEXP).join('')
+  const id = uid.value.match(BASE32HEX_REGEXP).join('').toLowerCase()
 
   return {
     id,
@@ -70,25 +63,6 @@ const parseEvent = event => {
     description: description.value,
     start: parseEventDate(dtstart),
     end: parseEventDate(dtend),
-  }
-}
-
-/**
- * Format a calendar events using the function specified in the ovveride file.
- *
- * @param {string} calendarId
- * @param {array} events
- * @returns {array}
- */
-const transformEvents = (calendarId, events) => {
-  const override = overrides[calendarId]
-  if (!override) return events
-
-  try {
-    return override(events)
-  } catch (e) {
-    console.error(e)
-    return events
   }
 }
 
@@ -111,24 +85,17 @@ const isEqual = (a, b) => {
   )
 }
 
-for (const calendarId of GOOGLE_CALENDAR_IDS) {
-  const i = GOOGLE_CALENDAR_IDS.indexOf(calendarId)
-
-  try {
-    if (existsSync(OVERRIDES_PATH)) {
-      overrides = await (await import(OVERRIDES_PATH)).default
-    }
-  } catch {}
+for (const subscription of SUBSCRIPTIONS) {
+  const { calendarId, url, fn = e => e } = subscription
 
   try {
     const { data } = await client.events.list({ calendarId })
     const events = data.items
 
-    const ics = await (await fetch(SUBSCRIPTION_URIS[i])).text()
+    const ics = await (await fetch(url)).text()
     const icsEvents = parseIcs(ics).events.map(event => parseEvent(event))
-    const icsEventsTransformed = transformEvents(calendarId, icsEvents)
 
-    for (const icsEvent of icsEventsTransformed) {
+    for (const icsEvent of fn(icsEvents)) {
       // Find the original event in the calendar
       const event = events.find(event => event.id === icsEvent.id)
 

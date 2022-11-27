@@ -22,5 +22,4 @@ jobs:
         env:
           GOOGLE_CLIENT_EMAIL: ${{ secrets.GOOGLE_CLIENT_EMAIL }}
           GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
-          GOOGLE_CALENDAR_IDS: ${{ secrets.GOOGLE_CALENDAR_IDS }}
-          SUBSCRIPTION_URIS: ${{ secrets.SUBSCRIPTION_URIS }}
+          SUBSCRIPTIONS: ${{ secrets.SUBSCRIPTIONS }}
