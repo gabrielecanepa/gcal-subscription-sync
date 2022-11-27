@@ -41,7 +41,7 @@ const client = googleCalendar({
  */
 const parseEventDate = dtdate => {
   const { value, params } = dtdate
-  return params.value === 'DATE' ? { date: value.toISOString().split('T')[0] } : { dateTime: value }
+  return params?.value === 'DATE' ? { date: value.toISOString().split('T')[0] } : { dateTime: value }
 }
 
 /**
